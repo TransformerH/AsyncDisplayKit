@@ -201,6 +201,8 @@ typedef struct {
   CGSize max;
 } ASSizeRange;
 
+extern ASSizeRange const ASSizeRangeUnconstrained;
+
 /**
  * Creates an ASSizeRange with provided min and max size.
  */
