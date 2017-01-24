@@ -11,9 +11,7 @@
 #import <pthread.h>
 
 #import <AsyncDisplayKit/_ASDisplayLayer.h>
-#import <AsyncDisplayKit/ASAssert.h>
 #import <AsyncDisplayKit/ASDisplayNode.h>
-#import <AsyncDisplayKit/ASThread.h>
 
 @class ASLayoutSpec;
 

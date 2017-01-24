@@ -105,7 +105,7 @@ ASDISPLAYNODE_EXTERN_C_END
 - (void)setEnvironmentState:(ASEnvironmentState)environmentState;
 
 /// Returns the parent of an object which class conforms to the ASEnvironment protocol
-- (id<ASEnvironment> _Nullable)parent;
+- (nullable id<ASEnvironment>)parent;
 
 /// Returns all children of an object which class conforms to the ASEnvironment protocol
 - (nullable NSArray<id<ASEnvironment>> *)children;

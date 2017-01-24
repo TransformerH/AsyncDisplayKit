@@ -8,7 +8,6 @@
 //  of patent rights can be found in the PATENTS file in the same directory.
 //
 
-#if TARGET_OS_IOS
 #import <AsyncDisplayKit/ASButtonNode.h>
 #import <AsyncDisplayKit/ASNetworkImageNode.h>
 
@@ -152,5 +151,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-#endif
-

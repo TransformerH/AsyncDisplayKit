@@ -9,8 +9,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ASTextKitAttributes.h"
-#import "ASTextKitContext.h"
+#import <AsyncDisplayKit/ASTextKitAttributes.h>
+#import <AsyncDisplayKit/ASTextKitContext.h>
 
 @interface ASTextKitFontSizeAdjuster : NSObject
 

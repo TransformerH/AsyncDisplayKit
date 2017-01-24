@@ -34,7 +34,7 @@ extern ASLayout *ASCalculateRootLayout(id<ASLayoutElement> rootLayoutElement, co
 
 /**
  * Safely computes the layout of the given node by guarding against nil nodes.
- * @param component The component to calculate the layout for.
+ * @param layoutElement The component to calculate the layout for.
  * @param sizeRange The size range to calculate the node layout within.
  * @param parentSize The parent size of the node to calculate the layout for.
  */

@@ -11,6 +11,7 @@
 //
 
 #import <AsyncDisplayKit/ASTableView.h>
+#import <AsyncDisplayKit/ASDataController.h>
 #import <AsyncDisplayKit/ASDisplayNode.h>
 #import <AsyncDisplayKit/ASRangeControllerUpdateRangeProtocol+Beta.h>
 
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol ASTableDataSource;
 @protocol ASTableDelegate;
-@class ASTableView;
+@class ASTableView, ASBatchContext;
 
 /**
  * ASTableNode is a node based class that wraps an ASTableView. It can be used

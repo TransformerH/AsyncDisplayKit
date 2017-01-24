@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ASTextKitTruncating.h"
+#import <AsyncDisplayKit/ASTextKitTruncating.h>
 
 @interface ASTextKitTailTruncater : NSObject <ASTextKitTruncating>
 

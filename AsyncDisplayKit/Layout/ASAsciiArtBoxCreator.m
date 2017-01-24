@@ -8,7 +8,7 @@
 //  of patent rights can be found in the PATENTS file in the same directory.
 //
 
-#import "ASAsciiArtBoxCreator.h"
+#import <AsyncDisplayKit/ASAsciiArtBoxCreator.h>
 
 #import <tgmath.h>
 

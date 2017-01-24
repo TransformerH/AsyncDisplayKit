@@ -17,8 +17,10 @@
 #import <AsyncDisplayKit/ASButtonNode.h>
 #import <AsyncDisplayKit/ASMapNode.h>
 #import <AsyncDisplayKit/ASVideoNode.h>
+#import <AsyncDisplayKit/ASVideoPlayerNode.h>
 #import <AsyncDisplayKit/ASEditableTextNode.h>
 
+#import <AsyncDisplayKit/ASImageProtocols.h>
 #import <AsyncDisplayKit/ASBasicImageDownloader.h>
 #import <AsyncDisplayKit/ASPINRemoteImageDownloader.h>
 #import <AsyncDisplayKit/ASMultiplexImageNode.h>
@@ -29,7 +31,7 @@
 #import <AsyncDisplayKit/ASTableNode.h>
 #import <AsyncDisplayKit/ASCollectionView.h>
 #import <AsyncDisplayKit/ASCollectionNode.h>
-#import <AsyncDisplayKit/ASCollectionViewFlowLayoutInspector.h>
+#import <AsyncDisplayKit/ASCollectionViewLayoutInspector.h>
 #import <AsyncDisplayKit/ASCollectionViewLayoutFacilitatorProtocol.h>
 #import <AsyncDisplayKit/ASCellNode.h>
 #import <AsyncDisplayKit/ASSectionContext.h>
@@ -65,6 +67,7 @@
 
 #import <AsyncDisplayKit/_ASAsyncTransaction.h>
 #import <AsyncDisplayKit/_ASAsyncTransactionGroup.h>
+#import <AsyncDisplayKit/_ASAsyncTransactionContainer.h>
 #import <AsyncDisplayKit/_ASDisplayView.h>
 #import <AsyncDisplayKit/ASDisplayNode+Beta.h>
 #import <AsyncDisplayKit/ASTextNode+Beta.h>

@@ -30,7 +30,7 @@ if [ "$MODE" = "tests" ]; then
         -scheme AsyncDisplayKit \
         -sdk "$SDK" \
         -destination "$PLATFORM" \
-        build test | xcpretty $FORMATTER
+        build-for-testing test | xcpretty $FORMATTER
     trap - EXIT
     exit 0
 fi

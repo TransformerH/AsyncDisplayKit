@@ -13,9 +13,9 @@
 // These methods must never be called or overridden by other classes.
 //
 
-#import "ASDisplayNode.h"
-#import "ASThread.h"
-#import "ASObjectDescriptionHelpers.h"
+#import <Foundation/Foundation.h>
+#import <AsyncDisplayKit/ASDisplayNode.h>
+#import <AsyncDisplayKit/ASObjectDescriptionHelpers.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
