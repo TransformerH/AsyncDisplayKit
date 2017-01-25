@@ -26,6 +26,7 @@
 #import "ASCollectionViewLayoutFacilitatorProtocol.h"
 #import "ASSectionContext.h"
 #import "ASCollectionView+Undeprecated.h"
+#import "_ASHierarchyChangeSet.h"
 
 /**
  * A macro to get self.collectionNode and assign it to a local variable, or return
@@ -57,7 +58,9 @@ typedef NS_ENUM(NSUInteger, ASCollectionViewInvalidationStyle) {
 };
 
 static const NSUInteger kASCollectionViewAnimationNone = UITableViewRowAnimationNone;
-static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
+
+/// Used for all cells and supplementaries. UICV keys by supp-kind+reuseID so this is plenty.
+static NSString * const kReuseIdentifier = @"_ASCollectionReuseIdentifier";
 
 #pragma mark -
 #pragma mark ASCellNode<->UICollectionViewCell bridging.
@@ -194,7 +197,17 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
    * (0 sections) we always check at least once after each update (initial reload is the first update.)
    */
   BOOL _hasEverCheckedForBatchFetchingDueToUpdate;
-    
+
+  /**
+   * The change set that we're currently building, if any.
+   */
+  _ASHierarchyChangeSet *_changeSet;
+  
+  /**
+   * Counter used to keep track of nested batch updates.
+   */
+  NSInteger _batchUpdateCount;
+  
   struct {
     unsigned int scrollViewDidScroll:1;
     unsigned int scrollViewWillBeginDragging:1;
@@ -338,7 +351,7 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
   _cellsForVisibilityUpdates = [NSMutableSet set];
   self.backgroundColor = [UIColor whiteColor];
   
-  [self registerClass:[_ASCollectionViewCell class] forCellWithReuseIdentifier:kCellReuseIdentifier];
+  [self registerClass:[_ASCollectionViewCell class] forCellWithReuseIdentifier:kReuseIdentifier];
   
   if (!AS_AT_LEAST_IOS9) {
     _retainedLayer = self.layer;
@@ -350,6 +363,8 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
 - (void)dealloc
 {
   ASDisplayNodeAssertMainThread();
+  ASDisplayNodeCAssert(_batchUpdateCount == 0, @"ASCollectionView deallocated in the middle of a batch update.");
+  
   // Sometimes the UIKit classes can call back to their delegate even during deallocation, due to animation completion blocks etc.
   _isDeallocating = YES;
   [self setAsyncDelegate:nil];
@@ -400,6 +415,12 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
 - (void)waitUntilAllUpdatesAreCommitted
 {
   ASDisplayNodeAssertMainThread();
+  if (_batchUpdateCount > 0) {
+    // This assertion will be enabled soon.
+    //    ASDisplayNodeFailAssert(@"Should not call %@ during batch update", NSStringFromSelector(_cmd));
+    return;
+  }
+  
   [_dataController waitUntilAllUpdatesAreCommitted];
 }
 
@@ -759,15 +780,43 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
   return _dataController;
 }
 
+- (void)beginUpdates
+{
+  ASDisplayNodeAssertMainThread();
+  // _changeSet must be available during batch update
+  ASDisplayNodeAssertTrue((_batchUpdateCount > 0) == (_changeSet != nil));
+  
+  if (_batchUpdateCount == 0) {
+    _changeSet = [[_ASHierarchyChangeSet alloc] initWithOldData:[_dataController itemCountsFromDataSource]];
+  }
+  _batchUpdateCount++;  
+}
+
+- (void)endUpdatesAnimated:(BOOL)animated completion:(nullable void (^)(BOOL))completion
+{
+  ASDisplayNodeAssertMainThread();
+  ASDisplayNodeAssertNotNil(_changeSet, @"_changeSet must be available when batch update ends");
+
+  _batchUpdateCount--;
+  // Prevent calling endUpdatesAnimated:completion: in an unbalanced way
+  NSAssert(_batchUpdateCount >= 0, @"endUpdatesAnimated:completion: called without having a balanced beginUpdates call");
+  
+  [_changeSet addCompletionHandler:completion];
+  
+  if (_batchUpdateCount == 0) {
+    [_dataController updateWithChangeSet:_changeSet animated:animated];
+    _changeSet = nil;
+  }
+}
+
 - (void)performBatchAnimated:(BOOL)animated updates:(void (^)())updates completion:(void (^)(BOOL))completion
 {
   ASDisplayNodeAssertMainThread();
-  
-  [_dataController beginUpdates];
+  [self beginUpdates];
   if (updates) {
     updates();
   }
-  [_dataController endUpdatesAnimated:animated completion:completion];
+  [self endUpdatesAnimated:animated completion:completion];
 }
 
 - (void)performBatchUpdates:(void (^)())updates completion:(void (^)(BOOL))completion
@@ -780,35 +829,42 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
 {
   ASDisplayNodeAssert(elementKind != nil, @"A kind is needed for supplementary node registration");
   [_registeredSupplementaryKinds addObject:elementKind];
-  [self registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:elementKind
-                                            withReuseIdentifier:[self __reuseIdentifierForKind:elementKind]];
+  [self registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:elementKind withReuseIdentifier:kReuseIdentifier];
 }
 
 - (void)insertSections:(NSIndexSet *)sections
 {
   ASDisplayNodeAssertMainThread();
   if (sections.count == 0) { return; }
-  [_dataController insertSections:sections withAnimationOptions:kASCollectionViewAnimationNone];
+  [self performBatchUpdates:^{
+    [_changeSet insertSections:sections animationOptions:kASCollectionViewAnimationNone];
+  } completion:nil];
 }
 
 - (void)deleteSections:(NSIndexSet *)sections
 {
   ASDisplayNodeAssertMainThread();
   if (sections.count == 0) { return; }
-  [_dataController deleteSections:sections withAnimationOptions:kASCollectionViewAnimationNone];
+  [self performBatchUpdates:^{
+    [_changeSet deleteSections:sections animationOptions:kASCollectionViewAnimationNone];
+  } completion:nil];
 }
 
 - (void)reloadSections:(NSIndexSet *)sections
 {
   ASDisplayNodeAssertMainThread();
   if (sections.count == 0) { return; }
-  [_dataController reloadSections:sections withAnimationOptions:kASCollectionViewAnimationNone];
+  [self performBatchUpdates:^{
+    [_changeSet reloadSections:sections animationOptions:kASCollectionViewAnimationNone];
+  } completion:nil];
 }
 
 - (void)moveSection:(NSInteger)section toSection:(NSInteger)newSection
 {
   ASDisplayNodeAssertMainThread();
-  [_dataController moveSection:section toSection:newSection withAnimationOptions:kASCollectionViewAnimationNone];
+  [self performBatchUpdates:^{
+    [_changeSet moveSection:section toSection:newSection animationOptions:kASCollectionViewAnimationNone];
+  } completion:nil];
 }
 
 - (id<ASSectionContext>)contextForSection:(NSInteger)section
@@ -821,32 +877,35 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
 {
   ASDisplayNodeAssertMainThread();
   if (indexPaths.count == 0) { return; }
-  [_dataController insertRowsAtIndexPaths:indexPaths withAnimationOptions:kASCollectionViewAnimationNone];
+  [self performBatchUpdates:^{
+    [_changeSet insertItems:indexPaths animationOptions:kASCollectionViewAnimationNone];
+  } completion:nil];
 }
 
 - (void)deleteItemsAtIndexPaths:(NSArray *)indexPaths
 {
   ASDisplayNodeAssertMainThread();
   if (indexPaths.count == 0) { return; }
-  [_dataController deleteRowsAtIndexPaths:indexPaths withAnimationOptions:kASCollectionViewAnimationNone];
+  [self performBatchUpdates:^{
+    [_changeSet deleteItems:indexPaths animationOptions:kASCollectionViewAnimationNone];
+  } completion:nil];
 }
 
 - (void)reloadItemsAtIndexPaths:(NSArray *)indexPaths
 {
   ASDisplayNodeAssertMainThread();
   if (indexPaths.count == 0) { return; }
-  [_dataController reloadRowsAtIndexPaths:indexPaths withAnimationOptions:kASCollectionViewAnimationNone];
+  [self performBatchUpdates:^{
+    [_changeSet reloadItems:indexPaths animationOptions:kASCollectionViewAnimationNone];
+  } completion:nil];
 }
 
 - (void)moveItemAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath
 {
   ASDisplayNodeAssertMainThread();
-  [_dataController moveRowAtIndexPath:indexPath toIndexPath:newIndexPath withAnimationOptions:kASCollectionViewAnimationNone];
-}
-
-- (NSString *)__reuseIdentifierForKind:(NSString *)kind
-{
-  return [@"_ASCollectionSupplementaryView_" stringByAppendingString:kind];
+  [self performBatchUpdates:^{
+    [_changeSet moveItemAtIndexPath:indexPath toIndexPath:newIndexPath animationOptions:kASCollectionViewAnimationNone];
+  } completion:nil];
 }
 
 #pragma mark -
@@ -870,8 +929,7 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-  NSString *identifier = [self __reuseIdentifierForKind:kind];
-  UICollectionReusableView *view = [self dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:identifier forIndexPath:indexPath];
+  UICollectionReusableView *view = [self dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
   ASCellNode *node = [_dataController supplementaryNodeOfKind:kind atIndexPath:indexPath];
   ASDisplayNodeAssert(node != nil, @"Supplementary node should exist.  Kind = %@, indexPath = %@, collectionDataSource = %@", kind, indexPath, self);
   [_rangeController configureContentView:view forCellNode:node];
@@ -882,7 +940,7 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  _ASCollectionViewCell *cell = [self dequeueReusableCellWithReuseIdentifier:kCellReuseIdentifier forIndexPath:indexPath];
+  _ASCollectionViewCell *cell = [self dequeueReusableCellWithReuseIdentifier:kReuseIdentifier forIndexPath:indexPath];
   
   ASCellNode *node = [self nodeForItemAtIndexPath:indexPath];
   cell.node = node;
@@ -1412,6 +1470,9 @@ static NSString * const kCellReuseIdentifier = @"_ASCollectionViewCell";
     [node enterHierarchyState:ASHierarchyStateRangeManaged];
     if (node.interactionDelegate == nil) {
       node.interactionDelegate = strongSelf;
+    }
+    if (_inverted) {
+        node.transform = CATransform3DMakeScale(1, -1, 1) ;
     }
     return node;
   };

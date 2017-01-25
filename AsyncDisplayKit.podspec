@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'AsyncDisplayKit'
-  spec.version      = '2.0.1'
+  spec.version      = '2.0.2'
   spec.license      =  { :type => 'BSD' }
   spec.homepage     = 'http://asyncdisplaykit.org'
   spec.authors      = { 'Scott Goodson' => 'scottgoodson@gmail.com' }
@@ -9,8 +9,7 @@ Pod::Spec.new do |spec|
 
   spec.documentation_url = 'http://asyncdisplaykit.org/appledoc/'
 
-  spec.frameworks = 'AssetsLibrary'
-  spec.weak_frameworks = 'Photos','MapKit'
+  spec.weak_frameworks = 'Photos','MapKit','AssetsLibrary'
   spec.requires_arc = true
 
   spec.ios.deployment_target = '7.0'
@@ -23,7 +22,7 @@ Pod::Spec.new do |spec|
     core.public_header_files = [
         'AsyncDisplayKit/*.h',
         'AsyncDisplayKit/Details/**/*.h',
-        'AsyncDisplayKit/Layout/*.h',
+        'AsyncDisplayKit/Layout/**/*.h',
         'Base/*.h',
         'AsyncDisplayKit/Debug/ASLayoutElementInspectorNode.h',
         'AsyncDisplayKit/TextKit/ASTextNodeTypes.h',
