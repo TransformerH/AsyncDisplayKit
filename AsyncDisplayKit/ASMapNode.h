@@ -14,13 +14,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+  * Default - The annotations' positions are ignored, use the region or options specified instead.
+  * Zoomed - The annotations' positions are used to calculate the region to show in the map, equivalent to showAnnotations:animated.
+  * Animated - This will only have an effect if combined with the Zoomed state with liveMap turned on.
+  */
 typedef NS_OPTIONS(NSUInteger, ASMapNodeShowAnnotationsOptions)
 {
-  /** The annotations' positions are ignored, use the region or options specified instead. */
   ASMapNodeShowAnnotationsOptionsIgnored  = 0,
-  /** The annotations' positions are used to calculate the region to show in the map, equivalent to showAnnotations:animated. */
   ASMapNodeShowAnnotationsOptionsZoomed   = 1 << 0,
-  /** This will only have an effect if combined with the Zoomed state with liveMap turned on.*/
   ASMapNodeShowAnnotationsOptionsAnimated = 1 << 1
 };
 

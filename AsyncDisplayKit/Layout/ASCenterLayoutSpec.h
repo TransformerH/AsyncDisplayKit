@@ -10,27 +10,33 @@
 
 #import <AsyncDisplayKit/ASRelativeLayoutSpec.h>
 
-/** How the child is centered within the spec. */
+/** 
+  * How the child is centered within the spec.
+  *
+  * None - The child is positioned in {0,0} relatively to the layout bound. 
+  * X    - The child is centered along the X axis
+  * Y    - The child is centered along the Y axis
+  * XY   - Convenience option to center both along the X and Y axis
+  */
 typedef NS_OPTIONS(NSUInteger, ASCenterLayoutSpecCenteringOptions) {
-  /** The child is positioned in {0,0} relatively to the layout bounds */
   ASCenterLayoutSpecCenteringNone = 0,
-  /** The child is centered along the X axis */
   ASCenterLayoutSpecCenteringX = 1 << 0,
-  /** The child is centered along the Y axis */
   ASCenterLayoutSpecCenteringY = 1 << 1,
-  /** Convenience option to center both along the X and Y axis */
   ASCenterLayoutSpecCenteringXY = ASCenterLayoutSpecCenteringX | ASCenterLayoutSpecCenteringY
 };
 
-/** How much space the spec will take up. */
+/** 
+  * How much space the spec will take up.
+  *
+  * Default   - The spec will take up the maximum size possible
+  * MinimumX  - The spec will take up the minimum size possible along the X axis
+  * MinimumY  - The spec will take up the minimum size possible along the Y axis
+  * MinimumXY - Convenience option to take up the minimum size along both the X and Y axis
+  */
 typedef NS_OPTIONS(NSUInteger, ASCenterLayoutSpecSizingOptions) {
-  /** The spec will take up the maximum size possible */
   ASCenterLayoutSpecSizingOptionDefault = ASRelativeLayoutSpecSizingOptionDefault,
-  /** The spec will take up the minimum size possible along the X axis */
   ASCenterLayoutSpecSizingOptionMinimumX = ASRelativeLayoutSpecSizingOptionMinimumWidth,
-  /** The spec will take up the minimum size possible along the Y axis */
   ASCenterLayoutSpecSizingOptionMinimumY = ASRelativeLayoutSpecSizingOptionMinimumHeight,
-  /** Convenience option to take up the minimum size along both the X and Y axis */
   ASCenterLayoutSpecSizingOptionMinimumXY = ASRelativeLayoutSpecSizingOptionMinimumSize
 };
 

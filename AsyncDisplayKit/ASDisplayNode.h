@@ -61,18 +61,19 @@ typedef ASLayoutSpec * _Nonnull(^ASLayoutSpecBlock)(__kindof ASDisplayNode * _No
  actions: measurement, data loading, display, and visibility (the latter for animations or other onscreen-only effects).
  */
 
+/**
+  * None - The element is not predicted to be onscreen soon and preloading should not be performed.
+  * MeasureLayout - The element may be added to a view soon that could become visible. Measure the layout, including size calculation.
+  * Preload - The element is likely enough to come onscreen that disk and/or network data required for display should be fetched.
+  * Display - The element is very likely to become visible, and concurrent rendering should be executed for any -setNeedsDisplay.
+  * Visible - The element is physically onscreen by at least 1 pixel. In practice, all other bit fields should also be set when this flag is set.
+  */
 typedef NS_OPTIONS(NSUInteger, ASInterfaceState)
 {
-  /** The element is not predicted to be onscreen soon and preloading should not be performed */
   ASInterfaceStateNone          = 0,
-  /** The element may be added to a view soon that could become visible.  Measure the layout, including size calculation. */
   ASInterfaceStateMeasureLayout = 1 << 0,
-  /** The element is likely enough to come onscreen that disk and/or network data required for display should be fetched. */
   ASInterfaceStatePreload       = 1 << 1,
-  /** The element is very likely to become visible, and concurrent rendering should be executed for any -setNeedsDisplay. */
   ASInterfaceStateDisplay       = 1 << 2,
-  /** The element is physically onscreen by at least 1 pixel.
-   In practice, all other bit fields should also be set when this flag is set. */
   ASInterfaceStateVisible       = 1 << 3,
 
   /**
