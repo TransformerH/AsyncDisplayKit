@@ -9,6 +9,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AsyncDisplayKit/ASBaseDefines.h>
 
 /**
  A threadsafe container for the TextKit components that ASTextKit uses to lay out and truncate its text.
@@ -38,7 +39,7 @@
 
  Callers MUST NOT keep a ref to these internal objects and use them later.  This WILL cause crashes in your application.
  */
-- (void)performBlockWithLockedTextKitComponents:(void (^)(NSLayoutManager *layoutManager,
+- (void)performBlockWithLockedTextKitComponents:(AS_NOESCAPE void (^)(NSLayoutManager *layoutManager,
                                                           NSTextStorage *textStorage,
                                                           NSTextContainer *textContainer))block;
 

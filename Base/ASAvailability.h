@@ -8,9 +8,6 @@
 //  of patent rights can be found in the PATENTS file in the same directory.
 //
 
-#import <Availability.h>
-#import <AvailabilityInternal.h>
-
 #import <CoreFoundation/CFBase.h>
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0
