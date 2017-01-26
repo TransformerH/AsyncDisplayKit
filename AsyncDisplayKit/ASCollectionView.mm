@@ -271,10 +271,6 @@ static NSString * const kReuseIdentifier = @"_ASCollectionReuseIdentifier";
 
 @end
 
-@interface ASCollectionNode ()
-- (instancetype)_initWithCollectionView:(ASCollectionView *)collectionView;
-@end
-
 @implementation ASCollectionView
 {
   __weak id<ASCollectionDelegate> _asyncDelegate;
