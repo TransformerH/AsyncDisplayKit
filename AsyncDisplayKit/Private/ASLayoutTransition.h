@@ -13,6 +13,7 @@
 #import <AsyncDisplayKit/ASDimension.h>
 #import <AsyncDisplayKit/_ASTransitionContext.h>
 #import <AsyncDisplayKit/ASDisplayNodeLayout.h>
+#import <AsyncDisplayKit/ASBaseDefines.h>
 
 #import <memory>
 
@@ -20,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class ASDisplayNode;
 
+AS_SUBCLASSING_RESTRICTED
 @interface ASLayoutTransition : NSObject <_ASTransitionContextLayoutDelegate>
 
 /**

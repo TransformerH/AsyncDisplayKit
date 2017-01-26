@@ -22,6 +22,7 @@
 #import <AsyncDisplayKit/_ASAsyncTransaction.h>
 #import <AsyncDisplayKit/_ASAsyncTransactionContainer+Private.h>
 #import <AsyncDisplayKit/_ASCoreAnimationExtras.h>
+#import <AsyncDisplayKit/_ASDisplayLayer.h>
 #import <AsyncDisplayKit/_ASDisplayView.h>
 #import <AsyncDisplayKit/_ASPendingState.h>
 #import <AsyncDisplayKit/_ASScopeTimer.h>

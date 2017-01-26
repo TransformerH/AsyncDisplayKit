@@ -15,6 +15,7 @@
 
 #import <AsyncDisplayKit/ASDisplayNode+Subclasses.h>
 #import <AsyncDisplayKit/ASEqualityHelpers.h>
+#import <AsyncDisplayKit/ASTextKitComponents.h>
 #import <AsyncDisplayKit/ASTextNodeWordKerner.h>
 #import <AsyncDisplayKit/ASThread.h>
 

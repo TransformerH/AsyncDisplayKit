@@ -10,10 +10,10 @@
 
 #import <pthread.h>
 
-#import <AsyncDisplayKit/_ASDisplayLayer.h>
+#import <AsyncDisplayKit/ASBlockTypes.h>
 #import <AsyncDisplayKit/ASDisplayNode.h>
 
-@class ASLayoutSpec;
+@class ASLayoutSpec, _ASDisplayLayer;
 
 NS_ASSUME_NONNULL_BEGIN
 

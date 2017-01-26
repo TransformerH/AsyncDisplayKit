@@ -15,7 +15,7 @@
 #import <AsyncDisplayKit/ASDimension.h>
 #import <AsyncDisplayKit/ASLayoutElement.h>
 
-#import <AsyncDisplayKit/ASAssert.h>
+//#import <AsyncDisplayKit/ASAssert.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -9,11 +9,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <AsyncDisplayKit/ASBaseDefines.h>
 
 // This class is only for use by ASDisplayNode and should never be subclassed or used directly.
 // Note that the "node" property is added to UIView directly via a category in ASDisplayNode.
 
+AS_SUBCLASSING_RESTRICTED
 @interface _ASDisplayView : UIView
 
 // These methods expose a way for ASDisplayNode touch events to let the view call super touch events

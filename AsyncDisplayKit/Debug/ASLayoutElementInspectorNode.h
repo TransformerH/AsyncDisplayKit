@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <AsyncDisplayKit/ASDisplayNode.h>
-#import <AsyncDisplayKit/ASLayoutElement.h>
+
+@protocol ASLayoutElement;
 
 @protocol ASLayoutElementInspectorNodeDelegate <NSObject>
 

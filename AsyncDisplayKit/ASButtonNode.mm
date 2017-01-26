@@ -15,6 +15,8 @@
 #import <AsyncDisplayKit/ASBackgroundLayoutSpec.h>
 #import <AsyncDisplayKit/ASInsetLayoutSpec.h>
 #import <AsyncDisplayKit/ASAbsoluteLayoutSpec.h>
+#import <AsyncDisplayKit/ASTextNode.h>
+#import <AsyncDisplayKit/ASImageNode.h>
 
 @interface ASButtonNode ()
 {

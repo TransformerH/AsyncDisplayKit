@@ -11,6 +11,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AsyncDisplayKit/ASBaseDefines.h>
 
 #ifndef ASEVENTLOG_CAPACITY
 #define ASEVENTLOG_CAPACITY 5
@@ -22,6 +23,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+AS_SUBCLASSING_RESTRICTED
 @interface ASEventLog : NSObject
 
 /**

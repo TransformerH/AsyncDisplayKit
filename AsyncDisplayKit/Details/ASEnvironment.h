@@ -10,6 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import <AsyncDisplayKit/ASBaseDefines.h>
 #import <AsyncDisplayKit/ASDimension.h>
 #import <AsyncDisplayKit/ASStackLayoutDefines.h>
 
