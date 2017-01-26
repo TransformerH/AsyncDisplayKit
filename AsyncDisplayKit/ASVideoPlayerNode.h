@@ -17,6 +17,7 @@
 #import <AsyncDisplayKit/ASDisplayNode+Subclasses.h>
 
 @class AVAsset;
+@class ASButtonNode;
 @protocol ASVideoPlayerNodeDelegate;
 
 typedef NS_ENUM(NSInteger, ASVideoPlayerNodeControlType) {
